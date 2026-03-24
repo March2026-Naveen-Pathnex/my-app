@@ -17,7 +17,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git 'https://github.com:March2026-Naveen-Pathnex/my-app.git'
+                git 'https://github.com/March2026-Naveen-Pathnex/my-app.git'
             }
         }
 
