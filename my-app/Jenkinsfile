@@ -1,40 +1,27 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "myapp"
-        CONTAINER_NAME = "myapp-container"
-        PORT = "8081"
-    }
-
     stages {
+
+        stage('Clone Code') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t myapp .'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Run Container') {
             steps {
                 sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
+                docker stop myapp || true
+                docker rm myapp || true
+                docker run -d -p 8081:80 myapp
                 '''
-            }
-        }
-
-        stage('Run New Container') {
-            steps {
-                sh '''
-                docker run -d -p $PORT:80 --name $CONTAINER_NAME $IMAGE_NAME
-                '''
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                sh 'docker ps'
             }
         }
     }
